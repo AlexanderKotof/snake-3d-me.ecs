@@ -10,5 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 638694960c78f004f93fbe929b88f916, type: 3}
-  m_Name: New Feature FF Data
+  m_Name: CollectablesFeature
   m_EditorClassIdentifier: 
+  editorComment: 
+  collectables:
+  - view: {fileID: 4163329642624383390, guid: 32e945a40aa94d948bc9afca36077c5a, type: 3}
+    points: 1
+    snakeGrow: 1
+  - view: {fileID: 4481339140086679627, guid: 9d08d84070d75bf42b0d225b8a239078, type: 3}
+    points: 2
+    snakeGrow: 2
+  bananaRate: 5
