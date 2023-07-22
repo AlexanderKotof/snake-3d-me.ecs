@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Net.WebSockets;
 using System.Text;
 using System.Threading;
@@ -16,9 +17,9 @@ namespace Game.Client
 
         void CloseConnectionAsync();
 
-        event Action ConnectedToServer;
+        bool HasMessageReceived(out string message);
 
-        event Action<string> OnMessageReceived;
+        event Action ConnectedToServer;
 
         event Action OnDisconected;
     }
@@ -29,13 +30,14 @@ namespace Game.Client
 
         private ClientWebSocket Socket { get; set; }
 
-        private static BlockingCollection<string> SendQueue = new BlockingCollection<string>();
+        private BlockingCollection<string> SendQueue = new BlockingCollection<string>();
+
+        private Queue<string> ReceivedMessages = new Queue<string>();
 
         private CancellationTokenSource SocketLoopTokenSource;
         private CancellationTokenSource SendLoopTokenSource;
 
         public event Action ConnectedToServer;
-        public event Action<string> OnMessageReceived;
         public event Action OnDisconected;
 
         private const int CLOSE_SOCKET_TIMEOUT_MS = 10000;
@@ -121,7 +123,7 @@ namespace Game.Client
                         if (Socket.State == WebSocketState.Open && receiveResult.MessageType != WebSocketMessageType.Close)
                         {
                             string message = Encoding.UTF8.GetString(buffer.Array, 0, receiveResult.Count);
-                            OnMessageReceived?.Invoke(message);
+                            ReceivedMessages.Enqueue(message);
                         }
                     }
                 }
@@ -171,6 +173,11 @@ namespace Game.Client
                     Debug.LogException(ex);
                 }
             }
+        }
+
+        public bool HasMessageReceived(out string message)
+        {
+            return ReceivedMessages.TryDequeue(out message);
         }
     }
 }

@@ -1,5 +1,8 @@
 using Game.Client;
 using Game.Client.Messages;
+using System;
+using System.Collections;
+using System.Reflection;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -22,10 +25,10 @@ namespace Game
             client.StartConnectionAsync(_uri);
 
             client.ConnectedToServer += OnConnected;
-            client.OnDisconected += OnDisconected; ;
-            client.OnMessageReceived += OnMessageReceived;
-
+            client.OnDisconected += OnDisconected;
             ServicesProvider.Initialize(client);
+
+            DontDestroyOnLoad(this);
         }
 
         private void OnConnected()
@@ -48,6 +51,7 @@ namespace Game
             {
                 case _gameCreatedMessageType:
                     GameId = m.payload.id;
+                    Debug.Log($"Game Started message id {GameId}");
                     LoadGameScene();
                     break;
 
@@ -63,20 +67,28 @@ namespace Game
 
         private async void LoadGameScene()
         {
-            var operation = SceneManager.LoadSceneAsync("Game");
+            var operation = SceneManager.LoadSceneAsync(1);
 
             while (!operation.isDone)
                 await Task.Yield();
 
-            //TODO hide loading screen
+
         }
 
         [ContextMenu("Update game")]
         private void SendUpdateGameMessage()
         {
             ServicesProvider.Client.SendMessage(JSONSerializer.Serialize(
-                MessageFactory.CreateUpdateGameMessage(GameId, Random.Range(1, 10), Random.Range(3, 10))
+                MessageFactory.CreateUpdateGameMessage(GameId, UnityEngine.Random.Range(1, 10), UnityEngine.Random.Range(3, 10))
                 ));
+        }
+
+        private void Update()
+        {
+            if (ServicesProvider.Client.HasMessageReceived(out var message))
+            {
+                OnMessageReceived(message);
+            }
         }
 
         [ContextMenu("End game")]
@@ -90,7 +102,7 @@ namespace Game
         private void OnDestroy()
         {
             ServicesProvider.Client.ConnectedToServer -= OnConnected;
-            ServicesProvider.Client.OnMessageReceived -= OnMessageReceived;
+            ServicesProvider.Client.OnDisconected -= OnDisconected;
             ServicesProvider.Client.CloseConnectionAsync();
             ServicesProvider.Dispose();
         }
