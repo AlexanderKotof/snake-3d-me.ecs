@@ -2,7 +2,7 @@
 using ME.ECS.Collections;
 using UnityEngine;
 
-namespace Game.Features.PlayerFeature.Components
+namespace Game.Features.Player.Components
 {
     public struct IsSnake : IComponent { }
 
@@ -24,5 +24,11 @@ namespace Game.Features.PlayerFeature.Components
         {
 
         }
+    }
+
+    public struct DestroyComponent : IComponent
+    {
+        public float destoyAfter;
+        public float timer;
     }
 }

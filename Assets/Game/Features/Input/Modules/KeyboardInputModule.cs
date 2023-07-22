@@ -7,7 +7,7 @@ namespace Game.Modules {
     using UnityEngine.XR;
     using Game.Features.Input.Markers;
     using UnityEngine;
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
 
 #if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
@@ -16,29 +16,29 @@ namespace Game.Modules {
 #endif
     public sealed class KeyboardInputModule : IModule, IUpdate
     {
-        private PlayerInputFeature feature;
-
-        private PlayersFeature playerFeature;
+        private PlayerInputFeature _inputFeature;
+        private PlayerFeature _playerFeature;
 
         public World world { get; set; }
         
         void IModuleBase.OnConstruct() {
 
-            world.GetFeature(out feature);
-            world.GetFeature(out playerFeature);
+            world.GetFeature(out _inputFeature);
+            world.GetFeature(out _playerFeature);
         }
         
         void IModuleBase.OnDeconstruct() {}
 
         void IUpdate.Update(in float deltaTime)
         {
-            var currentDirection = playerFeature.PlayerEntity.Read<MovementDirection>().value;
-            var input = new Vector3(UnityEngine.Input.GetAxis(feature.horizontalAxis), 0, UnityEngine.Input.GetAxis(feature.verticalAxis));
+            var currentDirection = _playerFeature.PlayerEntity.Read<MovementDirection>().value;
+            var input = new Vector3(UnityEngine.Input.GetAxis(_inputFeature.horizontalAxis), 0, UnityEngine.Input.GetAxis(_inputFeature.verticalAxis));
 
             if (input.x == 0 && input.z == 0)
                 return;
 
             var dotProduct = Vector3.Dot(input, currentDirection);
+            // exclude same or opposite directions
             if (dotProduct != 0)
                 return;
 

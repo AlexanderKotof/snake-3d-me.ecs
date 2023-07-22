@@ -1,24 +1,24 @@
 ﻿using ME.ECS;
 
-namespace Game.Features.PlayerFeature.Views
+namespace Game.Features.Player.Views
 {
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
     using ME.ECS.Views.Providers;
+    using System.Threading.Tasks;
     using UnityEngine;
 
     public class SnakeView : MonoBehaviourView
     {
-        Vector3 targetPosition;
         public override bool applyStateJob => true;
 
-        MovementFeature feature;
-        public float movementSpeed;
+        public Animator animator;
 
         public GameObject faceGO;
 
+        private const string _destroyAnimationState = "DestroyAnim";
+
         public override void OnInitialize()
         {
-            world.GetFeature(out feature);
             faceGO.SetActive(entity.Has<SnakeComponent>());
         }
 
@@ -40,6 +40,17 @@ namespace Game.Features.PlayerFeature.Views
             {
                 transform.rotation = Quaternion.LookRotation(entity.Read<MovementDirection>().value);
             }
+
+            if (entity.Has<DestroyComponent>())
+            {
+                DestroyAnimation();
+            }
+        }
+
+        private async void DestroyAnimation()
+        {
+            await Task.Delay((int)(entity.Read<DestroyComponent>().destoyAfter * 1000));
+            animator.Play(_destroyAnimationState);
         }
     }
 }

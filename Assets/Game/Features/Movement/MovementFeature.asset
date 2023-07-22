@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MovementFeature
   m_EditorClassIdentifier: 
   editorComment: 
-  ticksPerMove: 10
+  ticksPerMove: 6

@@ -69,7 +69,7 @@ MonoBehaviour:
     enabled: 0
     parentId: 0
     roots: []
-  movementSpeed: 8
+  animator: {fileID: 4513358789343273770}
   faceGO: {fileID: 7926259851863996102}
 --- !u!1 &2436681242033499592
 GameObject:

@@ -75,15 +75,14 @@ namespace Game.Generator {
                 
             }
 
-            if (this.world != null && this.world.IsLoaded() == true) {
+            if (this.world != null && this.world.IsLoaded() == true)
+            {
 
                 var dt = Time.deltaTime;
                 this.world.PreUpdate(dt);
                 this.world.Update(dt);
 
             }
-
-            //Worlds.currentWorld.getmar
 
         }
 
@@ -93,10 +92,10 @@ namespace Game.Generator {
             
         }
 
-        public void OnDestroy() {
-            
+        public void OnDestroy()
+        {
             if (this.world == null || this.world.isActive == false) return;
-            
+
             this.DeInitializeFeatures(this.world);
             // Release world
             WorldUtilities.ReleaseWorld<TState>(ref this.world);

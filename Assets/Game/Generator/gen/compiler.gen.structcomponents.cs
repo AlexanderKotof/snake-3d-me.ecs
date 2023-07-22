@@ -12,12 +12,13 @@ namespace ME.ECS {
             WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectableComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectablesCounterComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.GameFieldSize>(false, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.PositionComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.DestroyComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.PositionComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Components.InputComponent>(true, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.IsGameField>(true, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.IsSnake>(true, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.SnakeComponent>(false, false, false, false, true, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.IsSnake>(true, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.SnakeComponent>(false, false, false, false, true, false, false, false, false);
 
         }
 
@@ -31,12 +32,13 @@ namespace ME.ECS {
             WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectableComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectablesCounterComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.GameFieldSize>(false, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.PositionComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.DestroyComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.PositionComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Components.InputComponent>(true, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.IsGameField>(true, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.IsSnake>(true, true, true, false, false, false, false, false, false);
-            WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.SnakeComponent>(false, false, false, false, true, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.IsSnake>(true, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Player.Components.SnakeComponent>(false, false, false, false, true, false, false, false, false);
 
             ComponentsInitializerWorld.Setup(ComponentsInitializerWorldGen.Init);
             CoreComponentsInitializer.Init(state, ref noState);
@@ -45,12 +47,13 @@ namespace ME.ECS {
             state.structComponents.ValidateUnmanaged<Game.Features.Collectables.Components.CollectableComponent>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Features.Collectables.Components.CollectablesCounterComponent>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Features.GameField.Components.GameFieldSize>(ref state.allocator, false);
-            state.structComponents.ValidateUnmanaged<Game.Features.PlayerFeature.Components.MovementDirection>(ref state.allocator, false);
-            state.structComponents.ValidateUnmanaged<Game.Features.PlayerFeature.Components.PositionComponent>(ref state.allocator, false);
+            state.structComponents.ValidateUnmanaged<Game.Features.Player.Components.DestroyComponent>(ref state.allocator, false);
+            state.structComponents.ValidateUnmanaged<Game.Features.Player.Components.MovementDirection>(ref state.allocator, false);
+            state.structComponents.ValidateUnmanaged<Game.Features.Player.Components.PositionComponent>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Components.InputComponent>(ref state.allocator, true);
             state.structComponents.ValidateUnmanaged<Game.Features.GameField.Components.IsGameField>(ref state.allocator, true);
-            state.structComponents.ValidateUnmanaged<Game.Features.PlayerFeature.Components.IsSnake>(ref state.allocator, true);
-            state.structComponents.ValidateCopyable<Game.Features.PlayerFeature.Components.SnakeComponent>(false);
+            state.structComponents.ValidateUnmanaged<Game.Features.Player.Components.IsSnake>(ref state.allocator, true);
+            state.structComponents.ValidateCopyable<Game.Features.Player.Components.SnakeComponent>(false);
 
         }
 
@@ -64,12 +67,13 @@ namespace ME.ECS {
             entity.ValidateDataUnmanaged<Game.Features.Collectables.Components.CollectableComponent>(false);
             entity.ValidateDataUnmanaged<Game.Features.Collectables.Components.CollectablesCounterComponent>(false);
             entity.ValidateDataUnmanaged<Game.Features.GameField.Components.GameFieldSize>(false);
-            entity.ValidateDataUnmanaged<Game.Features.PlayerFeature.Components.MovementDirection>(false);
-            entity.ValidateDataUnmanaged<Game.Features.PlayerFeature.Components.PositionComponent>(false);
+            entity.ValidateDataUnmanaged<Game.Features.Player.Components.DestroyComponent>(false);
+            entity.ValidateDataUnmanaged<Game.Features.Player.Components.MovementDirection>(false);
+            entity.ValidateDataUnmanaged<Game.Features.Player.Components.PositionComponent>(false);
             entity.ValidateDataUnmanaged<Game.Components.InputComponent>(true);
             entity.ValidateDataUnmanaged<Game.Features.GameField.Components.IsGameField>(true);
-            entity.ValidateDataUnmanaged<Game.Features.PlayerFeature.Components.IsSnake>(true);
-            entity.ValidateDataCopyable<Game.Features.PlayerFeature.Components.SnakeComponent>(false);
+            entity.ValidateDataUnmanaged<Game.Features.Player.Components.IsSnake>(true);
+            entity.ValidateDataCopyable<Game.Features.Player.Components.SnakeComponent>(false);
 
         }
 

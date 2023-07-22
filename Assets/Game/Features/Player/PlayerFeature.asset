@@ -15,3 +15,4 @@ MonoBehaviour:
   editorComment: 
   snakeView: {fileID: 4652031784679657396, guid: e5fa3a05414f13548ba46950586b1df7, type: 3}
   spawnCount: 3
+  destroyTimePerSegment: 0.1

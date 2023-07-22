@@ -6,7 +6,7 @@ namespace Game.Features.Input.Systems {
     using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
     using Components; using Modules; using Systems; using Markers;
     using UnityEngine;
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
 #pragma warning restore
 
 #if ECS_COMPILE_IL2CPP_OPTIONS
@@ -50,7 +50,7 @@ namespace Game.Features.Input.Systems {
 
         private void ChangeDirection(Vector3 dir)
         {
-            var playersFeature = this.world.GetFeature<PlayersFeature>();
+            var playersFeature = this.world.GetFeature<PlayerFeature>();
             var playerEntity = playersFeature.PlayerEntity;
 
             playerEntity.Set(new MovementDirection

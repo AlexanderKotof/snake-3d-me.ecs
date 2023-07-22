@@ -12,7 +12,7 @@ namespace Game.Features.Collectables.Systems
     using Modules;
     using Systems;
     using Markers;
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
     using System;
     using UnityEngine;
 #pragma warning restore
@@ -25,7 +25,7 @@ namespace Game.Features.Collectables.Systems
     public sealed class SpawnCollectableSystem : ISystem, ISystemBase, IAdvanceTick, IAdvanceTickBase
     {
         private CollectablesFeature feature;
-        private PlayersFeature playersFeature;
+        private PlayerFeature playersFeature;
 
         private Filter _snakeFilter;
         private Filter _collectablesFilter;

@@ -1,7 +1,7 @@
 ﻿using ME.ECS;
 using UnityEngine;
 
-namespace Game.Features.PlayerFeature.Components
+namespace Game.Features.Player.Components
 {
     public struct PositionComponent : IComponent
     {

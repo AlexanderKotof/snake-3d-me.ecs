@@ -5,7 +5,7 @@ namespace Game.Features.Collectables.Systems {
     #pragma warning disable
     using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
     using Components; using Modules; using Systems; using Markers;
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
     using System;
 #pragma warning restore
 
@@ -17,7 +17,7 @@ namespace Game.Features.Collectables.Systems {
     public sealed class CollectSystem : ISystemFilter {
         
         private CollectablesFeature feature;
-        private PlayersFeature playerFeature;
+        private PlayerFeature playerFeature;
 
         public static event Action<int, int> AddPoints;
 

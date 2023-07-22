@@ -1,6 +1,6 @@
 ﻿using ME.ECS;
 
-namespace Game.Features.PlayerFeature.Systems {
+namespace Game.Features.Player.Systems {
 
     #pragma warning disable
     using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
@@ -17,7 +17,7 @@ namespace Game.Features.PlayerFeature.Systems {
 #endif
     public sealed class SpawnSystem : ISystem {
         
-        private PlayersFeature feature;
+        private PlayerFeature feature;
         public World world { get; set; }
         
         void ISystemBase.OnConstruct() {

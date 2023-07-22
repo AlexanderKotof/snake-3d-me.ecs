@@ -16,8 +16,8 @@ MonoBehaviour:
   collectables:
   - view: {fileID: 4163329642624383390, guid: 32e945a40aa94d948bc9afca36077c5a, type: 3}
     points: 1
-    snakeGrow: 1
+    snakeGrow: 5
   - view: {fileID: 4481339140086679627, guid: 9d08d84070d75bf42b0d225b8a239078, type: 3}
     points: 2
-    snakeGrow: 2
+    snakeGrow: 5
   bananaRate: 5

@@ -24,8 +24,6 @@ namespace Game.Features {
         public string verticalAxis = "Vertical";
         public string horizontalAxis = "Horizontal";
 
-        private RPCId inputRPCId;
-
         protected override void OnConstruct()
         {
             AddModule<KeyboardInputModule>();

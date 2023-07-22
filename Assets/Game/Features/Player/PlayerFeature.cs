@@ -3,27 +3,29 @@
 namespace Game.Features {
 
     using Components; using Modules; using Systems; using Features; using Markers;
-    using PlayerFeature.Components; using PlayerFeature.Modules; using PlayerFeature.Systems; using PlayerFeature.Markers;
-    using Game.Features.PlayerFeature.Views;
+    using Player.Components; using Player.Modules; using Player.Systems; using Player.Markers;
+    using Game.Features.Player.Views;
     using ME.ECS.Collections;
     using UnityEngine;
     using System;
+    using Game.Features.Player.Systems;
 
-    namespace PlayerFeature.Components {}
-    namespace PlayerFeature.Modules {}
-    namespace PlayerFeature.Systems {}
-    namespace PlayerFeature.Markers {}
+    namespace Player.Components {}
+    namespace Player.Modules {}
+    namespace Player.Systems {}
+    namespace Player.Markers {}
     
     #if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
     #endif
-    public sealed class PlayersFeature : Feature
+    public sealed class PlayerFeature : Feature
     {
-
         public SnakeView snakeView;
         public int spawnCount;
+
+        public float destroyTimePerSegment = 0.5f;
 
         private RPCId createPlayerRPCId;
 
@@ -40,6 +42,8 @@ namespace Game.Features {
             createPlayerRPCId = network.RegisterRPC(new Action(CreatePlayer).Method);
 
             network.RPC(this, createPlayerRPCId);
+
+            AddSystem<GameOverSystem>();
         }
 
         private void CreatePlayer()
@@ -109,6 +113,5 @@ namespace Game.Features {
         {
             
         }
-
     }
 }

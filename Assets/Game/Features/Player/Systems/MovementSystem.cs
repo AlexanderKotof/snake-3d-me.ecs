@@ -6,7 +6,7 @@ namespace Game.Features.Movement.Systems {
     using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
     using Components; using Modules; using Systems; using Markers;
     using System.Numerics;
-    using Game.Features.PlayerFeature.Components;
+    using Game.Features.Player.Components;
     using System;
     using UnityEngine;
 #pragma warning restore
@@ -16,20 +16,19 @@ namespace Game.Features.Movement.Systems {
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
 #endif
-    public sealed class MovementSystem : ISystemFilter {
-        
-        private MovementFeature movementFeature;
+    public sealed class MovementSystem : ISystemFilter
+    { 
+        private MovementFeature _movementFeature;
+        private GameFieldFeatureFeature _gameFieldFeature;
 
-        private GameFieldFeatureFeature gameFieldFeature;
-        
         public World world { get; set; }
 
         void ISystemBase.OnConstruct() {
             
-            this.GetFeature(out this.movementFeature);
-            this.GetFeature(out this.gameFieldFeature);
+            this.GetFeature(out this._movementFeature);
+            this.GetFeature(out this._gameFieldFeature);
         }
-        
+
         void ISystemBase.OnDeconstruct() {}
         
         #if !CSHARP_8_OR_NEWER
@@ -49,7 +48,7 @@ namespace Game.Features.Movement.Systems {
     
         void ISystemFilter.AdvanceTick(in Entity entity, in float deltaTime)
         {
-            if (world.GetCurrentTick().v % movementFeature.ticksPerMove != movementFeature.ticksPerMove - 1)
+            if (world.GetCurrentTick().v % _movementFeature.ticksPerMove != _movementFeature.ticksPerMove - 1)
                 return;
 
             ref var position = ref entity.Get<PositionComponent>();
@@ -58,11 +57,11 @@ namespace Game.Features.Movement.Systems {
             var previousPosition = position.value;
             position.value += movementDirection.value;
 
-            if (Mathf.Abs(position.value.x) > gameFieldFeature.xSize / 2)
+            if (Mathf.Abs(position.value.x) > _gameFieldFeature.xSize / 2)
             {
                 position.value.x = Mathf.Sign(position.value.x) - position.value.x;
             }
-            if (Mathf.Abs(position.value.z) > gameFieldFeature.ySize / 2)
+            if (Mathf.Abs(position.value.z) > _gameFieldFeature.ySize / 2)
             {
                 position.value.z = Mathf.Sign(position.value.z) - position.value.z;
             }
