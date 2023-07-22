@@ -19,7 +19,8 @@ namespace Game.Features {
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
     #endif
-    public sealed class PlayersFeature : Feature {
+    public sealed class PlayersFeature : Feature
+    {
 
         public SnakeView snakeView;
         public int spawnCount;
@@ -30,15 +31,13 @@ namespace Game.Features {
 
         public Entity PlayerEntity { get; private set; }
 
-        public int PointsCount { get; private set; }
-
         protected override void OnConstruct()
         {
-            ViewId = this.world.RegisterViewSource(snakeView);
+            ViewId = world.RegisterViewSource(snakeView);
 
             var network = world.GetModule<NetworkModule>();
             network.RegisterObject(this);
-            createPlayerRPCId = network.RegisterRPC(new System.Action(CreatePlayer).Method);
+            createPlayerRPCId = network.RegisterRPC(new Action(CreatePlayer).Method);
 
             network.RPC(this, createPlayerRPCId);
         }
@@ -53,8 +52,10 @@ namespace Game.Features {
 
                 if (i == 0)
                 {
-                    entity.Set(new MovementDirection { value = Vector3.left });
-
+                    entity.Set(new MovementDirection 
+                    {
+                        value = Vector3.left 
+                    });
                     SetPlayer(entity);
                 }
                 else
@@ -63,14 +64,15 @@ namespace Game.Features {
                 }
 
                 entity.Set<IsSnake>();
-
-                entity.Set(new PositionComponent { value = new Vector3(i, 0, 0) });
+                entity.Set(new PositionComponent 
+                {
+                    value = new Vector3(i, 0, 0) 
+                });
 
                 world.InstantiateView(ViewId, entity);
             }
 
-            PlayerEntity.Set(new SnakeComponent { tail = new BufferArray<Entity>(tail, spawnCount - 1) });
-
+            PlayerEntity.Set(new SnakeComponent { tail = new BufferArray<Entity>(tail, tail.Length) });
         }
 
         public void SetPlayer(in Entity entity)
@@ -78,7 +80,7 @@ namespace Game.Features {
             PlayerEntity = entity;
         }
 
-        public void AddTailSegment(int count)
+        public void AddTailSegments(int count)
         {
             ref var tailComponent = ref PlayerEntity.Get<SnakeComponent>();
 
@@ -96,6 +98,7 @@ namespace Game.Features {
                 entity.Set(new PositionComponent { value = previousPosition + deltaPosition });
 
                 tailComponent.tail.Resize(tailLength + 1);
+
                 tailComponent.tail[tailLength] = entity;
 
                 world.InstantiateView(ViewId, entity);
@@ -107,10 +110,5 @@ namespace Game.Features {
             
         }
 
-        public void AddPoints(int pointsCount)
-        {
-            PointsCount += pointsCount;
-        }
     }
-
 }

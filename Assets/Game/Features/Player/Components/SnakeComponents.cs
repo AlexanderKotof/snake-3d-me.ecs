@@ -1,21 +1,10 @@
 ﻿using ME.ECS;
 using ME.ECS.Collections;
-using Unity.Collections;
 using UnityEngine;
 
-namespace Game.Features.PlayerFeature.Components {
-
+namespace Game.Features.PlayerFeature.Components
+{
     public struct IsSnake : IComponent { }
-
-    public struct MovementSpeed : IComponent {
-
-        public float value;
-    }
-
-    public struct PositionComponent : IComponent
-    {
-        public Vector3 value;
-    }
 
     public struct MovementDirection : IComponent
     {

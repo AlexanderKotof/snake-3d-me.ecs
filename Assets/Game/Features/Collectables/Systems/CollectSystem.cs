@@ -6,6 +6,7 @@ namespace Game.Features.Collectables.Systems {
     using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
     using Components; using Modules; using Systems; using Markers;
     using Game.Features.PlayerFeature.Components;
+    using System;
 #pragma warning restore
 
 #if ECS_COMPILE_IL2CPP_OPTIONS
@@ -17,6 +18,8 @@ namespace Game.Features.Collectables.Systems {
         
         private CollectablesFeature feature;
         private PlayersFeature playerFeature;
+
+        public static event Action<int, int> AddPoints;
 
         public World world { get; set; }
         
@@ -58,9 +61,10 @@ namespace Game.Features.Collectables.Systems {
         private void Collect(Entity entity)
         {
             var collectable = entity.Read<CollectableComponent>();
-            playerFeature.AddTailSegment(collectable.snakeGrow);
-            playerFeature.AddPoints(collectable.pointsCount);
-            entity.Remove<CollectableComponent>();
+            playerFeature.AddTailSegments(collectable.snakeGrow);
+
+            var snakeLength = playerFeature.PlayerEntity.Read<SnakeComponent>().tail.Length + 1;
+            AddPoints?.Invoke(collectable.pointsCount, snakeLength);
         }
     }
 }

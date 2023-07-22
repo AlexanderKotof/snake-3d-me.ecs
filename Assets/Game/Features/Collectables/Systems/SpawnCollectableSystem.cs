@@ -77,10 +77,11 @@ namespace Game.Features.Collectables.Systems
         private Vector3 GenerateRandomPosition()
         {
             Vector3 randomPosition;
-            bool intersection = false;
+            bool intersection;
 
             do
             {
+                intersection = false;
                 randomPosition = GenerateRandomVectorOnGameField();
                 foreach (var ent in _snakeFilter)
                 {
