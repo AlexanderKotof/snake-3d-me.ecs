@@ -7,6 +7,7 @@ namespace Game.Features.Input.Systems {
     using Components; using Modules; using Systems; using Markers;
     using UnityEngine;
     using Game.Features.Player.Components;
+    using UnityEngine.Windows;
 #pragma warning restore
 
 #if ECS_COMPILE_IL2CPP_OPTIONS
@@ -14,9 +15,9 @@ namespace Game.Features.Input.Systems {
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.ArrayBoundsChecks, false),
      Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.DivideByZeroChecks, false)]
 #endif
-    public sealed class InputToRPCSystem : ISystem, IAdvanceTick , IUpdate {
-        
-        private PlayerInputFeature feature;
+    public sealed class InputToRPCSystem : ISystem, IUpdate
+    {
+        private PlayerFeature _playerFeature;
 
         private RPCId inputRPCId;
 
@@ -24,7 +25,7 @@ namespace Game.Features.Input.Systems {
         
         void ISystemBase.OnConstruct()
         {
-            this.GetFeature(out this.feature);
+            this.GetFeature(out _playerFeature);
 
             var network = world.GetModule<NetworkModule>();
             network.RegisterObject(this);
@@ -33,11 +34,6 @@ namespace Game.Features.Input.Systems {
         }
         
         void ISystemBase.OnDeconstruct() {}
-        
-        public void AdvanceTick(in float deltaTime)
-        {
-
-        }
 
         public void Update(in float deltaTime)
         {
@@ -50,8 +46,13 @@ namespace Game.Features.Input.Systems {
 
         private void ChangeDirection(Vector3 dir)
         {
-            var playersFeature = this.world.GetFeature<PlayerFeature>();
-            var playerEntity = playersFeature.PlayerEntity;
+            var playerEntity = _playerFeature.PlayerEntity;
+            var currentDirection = playerEntity.Read<MovementDirection>().value;
+
+            var dotProduct = Vector3.Dot(dir, currentDirection);
+            // exclude same or opposite directions
+            if (dotProduct != 0)
+                return;
 
             playerEntity.Set(new MovementDirection
             {

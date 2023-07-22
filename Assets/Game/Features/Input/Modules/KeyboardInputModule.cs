@@ -1,13 +1,11 @@
 ﻿using ME.ECS;
 
-namespace Game.Modules {
-    
-    using Components; using Modules; using Systems; using Features; using Markers;
-    using UnityEngine.Windows;
-    using UnityEngine.XR;
+namespace Game.Modules
+{
+    using Features;
     using Game.Features.Input.Markers;
-    using UnityEngine;
     using Game.Features.Player.Components;
+    using UnityEngine;
 
 #if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
@@ -31,15 +29,9 @@ namespace Game.Modules {
 
         void IUpdate.Update(in float deltaTime)
         {
-            var currentDirection = _playerFeature.PlayerEntity.Read<MovementDirection>().value;
-            var input = new Vector3(UnityEngine.Input.GetAxis(_inputFeature.horizontalAxis), 0, UnityEngine.Input.GetAxis(_inputFeature.verticalAxis));
+            var input = new Vector3(Input.GetAxis(_inputFeature.horizontalAxis), 0, Input.GetAxis(_inputFeature.verticalAxis));
 
             if (input.x == 0 && input.z == 0)
-                return;
-
-            var dotProduct = Vector3.Dot(input, currentDirection);
-            // exclude same or opposite directions
-            if (dotProduct != 0)
                 return;
 
             if (input.x != 0)

@@ -78,6 +78,8 @@ namespace Game.Client
             Debug.Log("Closing connection");
 
             SendLoopTokenSource.Cancel();
+            SocketLoopTokenSource.Cancel();
+
             if (Socket == null || Socket.State != WebSocketState.Open)
                 return;
 
@@ -95,7 +97,7 @@ namespace Game.Client
                 // normal upon task/token cancellation, disregard
             }
             // whether we closed the socket or timed out, we cancel the token causing RecieveAsync to abort the socket
-            SocketLoopTokenSource.Cancel();
+
             // the finally block at the end of the processing loop will dispose and null the Socket object
         }
 

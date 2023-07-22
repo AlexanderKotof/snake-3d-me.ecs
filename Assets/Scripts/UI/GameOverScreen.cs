@@ -19,7 +19,7 @@ namespace UI.Screens
 
         void Start()
         {
-
+            restartButton.onClick.AddListener(() => onRestartButtonPressed?.Invoke());
         }
 
         void Update()

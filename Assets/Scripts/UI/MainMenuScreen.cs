@@ -27,5 +27,13 @@ namespace UI.Screens
             enterGameButton.gameObject.SetActive(false);
             loadingLabel.SetActive(true);
         }
+
+        public void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                onEnterButtonPressed?.Invoke();
+            }
+        }
     }
 }

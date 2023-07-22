@@ -2,11 +2,9 @@ using Game.Client;
 using Game.Client.Messages;
 using Game.Features.Collectables.Systems;
 using Game.Features.Player.Systems;
-using System;
 using System.Threading.Tasks;
 using UI;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game
 {
@@ -47,7 +45,7 @@ namespace Game
             public const string menuSceneName = "Startup";
             public const string gameSceneName = "Game";
 
-            public static bool IsMobilePlatform => Application.isMobilePlatform;
+            public static bool IsMobilePlatform => true;// Application.isMobilePlatform;
         }
 
         private void Start()
@@ -101,6 +99,10 @@ namespace Game
         private void OnDisconected()
         {
             Debug.Log("Disconected");
+
+            UIManager.Instance.ShowLoading();
+
+            Client.StartConnectionAsync(GameConfig.uri);
         }
         private void OnMessageReceived(string message)
         {
@@ -119,7 +121,13 @@ namespace Game
 
                 case GameConfig.gameEndedMessageType:
 
-                    UIManager.Instance.ShowGameOver();
+                    UIManager.Instance.ShowGameOver(() =>
+                    {
+                        Client.SendMessage(JSONSerializer.Serialize(
+                        MessageFactory.StartGameMessage
+                        ));
+                        UIManager.Instance.ShowLoading();
+                    });
 
                     Debug.Log("Game Ended message");
                     break;
@@ -156,19 +164,6 @@ namespace Game
             PlayerData.SetSnakeLength(snakeLenght);
 
             SendUpdateGameMessage();
-        }
-    }
-
-    public static class SceneLoadUtils
-    {
-        public static async void LoadScene(string name, Action onLoadedCallback)
-        {
-            var operation = SceneManager.LoadSceneAsync(name);
-
-            while (!operation.isDone)
-                await Task.Yield();
-
-            onLoadedCallback?.Invoke();
         }
     }
 }

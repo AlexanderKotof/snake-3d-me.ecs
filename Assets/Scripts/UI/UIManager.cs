@@ -56,12 +56,13 @@ namespace UI
         }
 
 
-        public void ShowGameOver()
+        public void ShowGameOver(Action restartButtonCallback)
         {
             mainMenuScreen.Hide();
             inGameScreen.Hide();
             gameOverScreen.Show();
 
+            gameOverScreen.onRestartButtonPressed = restartButtonCallback;
         }
     }
 }
