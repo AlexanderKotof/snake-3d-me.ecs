@@ -14,9 +14,12 @@ namespace Game.Features.PlayerFeature.Views
         MovementFeature feature;
         public float movementSpeed;
 
+        public GameObject faceGO;
+
         public override void OnInitialize()
         {
             world.GetFeature(out feature);
+            faceGO.SetActive(entity.Has<SnakeComponent>());
         }
 
         public override void OnDeInitialize()
@@ -31,19 +34,12 @@ namespace Game.Features.PlayerFeature.Views
 
         public override void ApplyState(float deltaTime, bool immediately)
         {
-            targetPosition = entity.Read<PositionComponent>().value;
-        }
+            transform.position = entity.Read<PositionComponent>().value;
 
-        private void Update()
-        {
-            if ((transform.position - targetPosition).sqrMagnitude < 1f)
+            if (entity.Has<MovementDirection>())
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetPosition, world.GetTickTime() / feature.ticksPerMove * Time.deltaTime * movementSpeed);
+                transform.rotation = Quaternion.LookRotation(entity.Read<MovementDirection>().value);
             }
-            else
-                transform.position = targetPosition;
         }
-
     }
-
 }

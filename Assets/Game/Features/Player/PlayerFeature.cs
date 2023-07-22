@@ -7,6 +7,7 @@ namespace Game.Features {
     using Game.Features.PlayerFeature.Views;
     using ME.ECS.Collections;
     using UnityEngine;
+    using System;
 
     namespace PlayerFeature.Components {}
     namespace PlayerFeature.Modules {}
@@ -28,6 +29,8 @@ namespace Game.Features {
         public ViewId ViewId { get; private set; }
 
         public Entity PlayerEntity { get; private set; }
+
+        public int PointsCount { get; private set; }
 
         protected override void OnConstruct()
         {
@@ -75,27 +78,39 @@ namespace Game.Features {
             PlayerEntity = entity;
         }
 
-        public void AddTailSegment()
+        public void AddTailSegment(int count)
         {
             ref var tailComponent = ref PlayerEntity.Get<SnakeComponent>();
-            var tailLength = tailComponent.tail.Length;
 
-            var entity = world.AddEntity($"Snake{tailLength}");
+            for (int i = 0; i < count; i++)
+            {
+                var tailLength = tailComponent.tail.Length;
 
-            entity.Set<IsSnake>();
+                var entity = world.AddEntity($"Snake{tailLength}");
 
-            entity.Set(new PositionComponent { value = tailComponent.tail[tailLength - 1].Read<PositionComponent>().value });
+                entity.Set<IsSnake>();
 
-            tailComponent.tail.Resize(tailLength + 1);
-            tailComponent.tail[tailLength - 1] = entity;
+                var previousPosition = tailComponent.tail[tailLength - 1].Read<PositionComponent>().value;
+                var deltaPosition = previousPosition - tailComponent.tail[tailLength - 2].Read<PositionComponent>().value;
 
-            world.InstantiateView(ViewId, entity);
+                entity.Set(new PositionComponent { value = previousPosition + deltaPosition });
+
+                tailComponent.tail.Resize(tailLength + 1);
+                tailComponent.tail[tailLength] = entity;
+
+                world.InstantiateView(ViewId, entity);
+            }
         }
 
-        protected override void OnDeconstruct() {
+        protected override void OnDeconstruct()
+        {
             
         }
 
+        public void AddPoints(int pointsCount)
+        {
+            PointsCount += pointsCount;
+        }
     }
 
 }

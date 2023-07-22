@@ -9,6 +9,8 @@ namespace ME.ECS {
             CoreComponentsInitializer.InitTypeId();
 
 
+            WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectableComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectablesCounterComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.GameFieldSize>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementSpeed>(false, true, true, false, false, false, false, false, false);
@@ -27,6 +29,8 @@ namespace ME.ECS {
             CoreComponentsInitializer.InitTypeId();
 
 
+            WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectableComponent>(false, true, true, false, false, false, false, false, false);
+            WorldUtilities.InitComponentTypeId<Game.Features.Collectables.Components.CollectablesCounterComponent>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.GameField.Components.GameFieldSize>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementDirection>(false, true, true, false, false, false, false, false, false);
             WorldUtilities.InitComponentTypeId<Game.Features.PlayerFeature.Components.MovementSpeed>(false, true, true, false, false, false, false, false, false);
@@ -40,6 +44,8 @@ namespace ME.ECS {
             CoreComponentsInitializer.Init(state, ref noState);
 
 
+            state.structComponents.ValidateUnmanaged<Game.Features.Collectables.Components.CollectableComponent>(ref state.allocator, false);
+            state.structComponents.ValidateUnmanaged<Game.Features.Collectables.Components.CollectablesCounterComponent>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Features.GameField.Components.GameFieldSize>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Features.PlayerFeature.Components.MovementDirection>(ref state.allocator, false);
             state.structComponents.ValidateUnmanaged<Game.Features.PlayerFeature.Components.MovementSpeed>(ref state.allocator, false);
@@ -58,6 +64,8 @@ namespace ME.ECS {
         public static void Init(Entity entity) {
 
 
+            entity.ValidateDataUnmanaged<Game.Features.Collectables.Components.CollectableComponent>(false);
+            entity.ValidateDataUnmanaged<Game.Features.Collectables.Components.CollectablesCounterComponent>(false);
             entity.ValidateDataUnmanaged<Game.Features.GameField.Components.GameFieldSize>(false);
             entity.ValidateDataUnmanaged<Game.Features.PlayerFeature.Components.MovementDirection>(false);
             entity.ValidateDataUnmanaged<Game.Features.PlayerFeature.Components.MovementSpeed>(false);

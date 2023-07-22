@@ -136,7 +136,7 @@ MonoBehaviour:
   selectedConfiguration: Debug
   featuresListCategories:
     items:
-    - folderCaption: TestFeature
+    - folderCaption: Game
       features:
         features:
         - enabled: 1
@@ -153,6 +153,10 @@ MonoBehaviour:
             features: []
         - enabled: 1
           feature: {fileID: 11400000, guid: a10fcfadcfb8d474dadb5cc44c346ff7, type: 2}
+          innerFeatures:
+            features: []
+        - enabled: 1
+          feature: {fileID: 11400000, guid: 07887b666028fc042a9d4384df7283c7, type: 2}
           innerFeatures:
             features: []
   worldSettings:
