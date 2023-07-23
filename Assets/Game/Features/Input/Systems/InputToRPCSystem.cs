@@ -54,6 +54,14 @@ namespace Game.Features.Input.Systems {
             if (dotProduct != 0)
                 return;
 
+            var firstTailSegment = playerEntity.Read<SnakeComponent>().tail[0];
+            var fromHeadToFirstDir = firstTailSegment.Read<PositionComponent>().value - playerEntity.Read<PositionComponent>().value;
+
+            dotProduct = Vector3.Dot(fromHeadToFirstDir, dir);
+            //exclude direction to tail
+            if (dotProduct > 0)
+                return;
+
             playerEntity.Set(new MovementDirection
             {
                 value = dir,
