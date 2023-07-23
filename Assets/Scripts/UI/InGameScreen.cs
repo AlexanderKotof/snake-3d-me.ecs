@@ -1,7 +1,5 @@
 ﻿using Game;
-using Game.Features;
 using Game.Features.Input.Markers;
-using Game.Features.Player.Components;
 using ME.ECS;
 using UnityEngine;
 using UnityEngine.UI;
@@ -56,7 +54,7 @@ namespace UI.Screens
             Worlds.currentWorld.AddMarker(new InputMarker { inputDirection = input });
         }
 
-        void Update()
+        private void Update()
         {
             pointsCounter.SetText(_playerData.PointsCount.ToString());
         }

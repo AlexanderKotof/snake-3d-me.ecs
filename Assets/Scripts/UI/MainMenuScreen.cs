@@ -16,6 +16,11 @@ namespace UI.Screens
             enterGameButton.onClick.AddListener(() => onEnterButtonPressed?.Invoke());
         }
 
+        private void OnDestroy()
+        {
+            enterGameButton.onClick.RemoveAllListeners();
+        }
+
         public void ShowEnterButton()
         {
             enterGameButton.gameObject.SetActive(true);

@@ -7,6 +7,14 @@ namespace UI
 {
     public class UIManager : MonoBehaviour
     {
+        public class GameInfo
+        {
+            public int applesCount;
+            public int snakeLength;
+            public int gameId;
+            public TimeSpan gameTime;
+        }
+
         public static UIManager Instance { get; private set; }
 
         public MainMenuScreen mainMenuScreen;
@@ -26,7 +34,6 @@ namespace UI
         public void SetModel(PlayerData data)
         {
             inGameScreen.SetModel(data);
-            gameOverScreen.SetModel(data);
         }
 
         public void ShowMainMenu(Action enterButtonCallback)
@@ -56,12 +63,13 @@ namespace UI
         }
 
 
-        public void ShowGameOver(Action restartButtonCallback)
+        public void ShowGameOver(Action restartButtonCallback, GameInfo info)
         {
             mainMenuScreen.Hide();
             inGameScreen.Hide();
             gameOverScreen.Show();
 
+            gameOverScreen.SetModel(info);
             gameOverScreen.onRestartButtonPressed = restartButtonCallback;
         }
     }

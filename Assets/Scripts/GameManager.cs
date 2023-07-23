@@ -2,6 +2,7 @@ using Game.Client;
 using Game.Client.Messages;
 using Game.Features.Collectables.Systems;
 using Game.Features.Player.Systems;
+using System;
 using System.Threading.Tasks;
 using UI;
 using UnityEngine;
@@ -30,23 +31,10 @@ namespace Game
         }
     }
 
-    public class GameManager : MonoBehaviour
+    public partial class GameManager : MonoBehaviour
     {
         public IClient Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
-
-        public static class GameConfig
-        {
-            public const string uri = "wss://dev.match.qubixinfinity.io/snake";
-
-            public const string gameCreatedMessageType = "game-created";
-            public const string gameEndedMessageType = "game-ended";
-
-            public const string menuSceneName = "Startup";
-            public const string gameSceneName = "Game";
-
-            public static bool IsMobilePlatform => true;// Application.isMobilePlatform;
-        }
 
         private void Start()
         {
@@ -106,6 +94,7 @@ namespace Game
         }
         private void OnMessageReceived(string message)
         {
+            Debug.Log($"Message received {message}");
             var m = JSONSerializer.Deserialize<IncomingMessage>(message);
 
             switch (m.type)
@@ -116,10 +105,18 @@ namespace Game
                     UIManager.Instance.ShowLoading();
                     SceneLoadUtils.LoadScene(GameConfig.gameSceneName, UIManager.Instance.ShowInGame);
 
-                    Debug.Log($"Game Started message id {PlayerData.GameId}");
+                    Debug.Log($"Game Started, id {PlayerData.GameId}");
                     break;
 
                 case GameConfig.gameEndedMessageType:
+                    Debug.Log("Game Ended");
+                    var gameInfo = new UIManager.GameInfo()
+                    {
+                        gameId = m.payload.id,
+                        applesCount = m.payload.collectedApples,
+                        snakeLength = m.payload.snakeLength,
+                        gameTime = TimeSpan.FromMilliseconds(m.payload.finishAt.Value - m.payload.startAt),
+                    };
 
                     UIManager.Instance.ShowGameOver(() =>
                     {
@@ -127,9 +124,9 @@ namespace Game
                         MessageFactory.StartGameMessage
                         ));
                         UIManager.Instance.ShowLoading();
-                    });
+                    }, gameInfo);
 
-                    Debug.Log("Game Ended message");
+
                     break;
 
                 default:

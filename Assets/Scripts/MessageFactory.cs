@@ -70,8 +70,8 @@ namespace Game.Client.Messages
         public class Payload
         {
             public string clientAddress;
-            public string startAt;
-            public string finishAt;
+            public long startAt;
+            public long? finishAt;
             public int id;
             public int collectedApples;
             public int snakeLength;
