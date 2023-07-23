@@ -1,10 +1,17 @@
 ﻿using ME.ECS;
 
-namespace Game.Features.Player.Systems {
+namespace Game.Features.Player.Systems
+{
 
-    #pragma warning disable
-    using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
-    using Components; using Modules; using Systems; using Markers;
+#pragma warning disable
+    using Game.Components;
+    using Game.Modules;
+    using Game.Systems;
+    using Game.Markers;
+    using Components;
+    using Modules;
+    using Systems;
+    using Markers;
     using Game.Features.Player.Components;
     using UnityEngine;
     using System;

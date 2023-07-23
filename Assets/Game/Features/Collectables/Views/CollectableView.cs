@@ -1,9 +1,10 @@
 ﻿using ME.ECS;
 
-namespace Game.Features.Collectables.Views {
-    using Game.Features.Player.Components;
+namespace Game.Features.Collectables.Views
+{
+    using Game.Components;
     using ME.ECS.Views.Providers;
-    
+
     public class CollectableView : MonoBehaviourView
     {
         public override bool applyStateJob => true;

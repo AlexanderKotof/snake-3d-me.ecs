@@ -1,10 +1,17 @@
 ﻿using ME.ECS;
 
-namespace Game.Features.Movement.Systems {
+namespace Game.Features.Movement.Systems
+{
 
-    #pragma warning disable
-    using Game.Components; using Game.Modules; using Game.Systems; using Game.Markers;
-    using Components; using Modules; using Systems; using Markers;
+#pragma warning disable
+    using Game.Components;
+    using Game.Modules;
+    using Game.Systems;
+    using Game.Markers;
+    using Components;
+    using Modules;
+    using Systems;
+    using Markers;
     using System.Numerics;
     using Game.Features.Player.Components;
     using System;

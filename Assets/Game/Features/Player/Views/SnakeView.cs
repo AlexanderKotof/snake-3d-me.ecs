@@ -2,6 +2,7 @@
 
 namespace Game.Features.Player.Views
 {
+    using Game.Components;
     using Game.Features.Player.Components;
     using ME.ECS.Views.Providers;
     using System.Threading.Tasks;
@@ -9,16 +10,20 @@ namespace Game.Features.Player.Views
 
     public class SnakeView : MonoBehaviourView
     {
-        public override bool applyStateJob => true;
+        public override bool applyStateJob => false;
+        public float movementSpeed = 0.5f;
+
+        private Vector3 _destination;
+        private MovementFeature _movementFeature;
 
         public Animator animator;
-
         public GameObject faceGO;
 
         private const string _destroyAnimationState = "DestroyAnim";
 
         public override void OnInitialize()
         {
+            _movementFeature = world.GetFeature<MovementFeature>();
             faceGO.SetActive(entity.Has<SnakeComponent>());
         }
 
@@ -34,7 +39,7 @@ namespace Game.Features.Player.Views
 
         public override void ApplyState(float deltaTime, bool immediately)
         {
-            transform.position = entity.Read<PositionComponent>().value;
+            _destination = entity.Read<PositionComponent>().value;
 
             if (entity.Has<MovementDirection>())
             {
@@ -44,6 +49,18 @@ namespace Game.Features.Player.Views
             if (entity.Has<DestroyComponent>())
             {
                 DestroyAnimation();
+            }
+        }
+
+        private void Update()
+        {
+            if ((_destination - transform.position).sqrMagnitude <= 1f)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, _destination, _movementFeature.ticksPerMove * world.GetTickTime() * movementSpeed * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = _destination;
             }
         }
 

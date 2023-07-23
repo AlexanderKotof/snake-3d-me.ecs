@@ -1,19 +1,27 @@
 ﻿using ME.ECS;
 
-namespace Game.Features {
+namespace Game.Features
+{
 
-    using Components; using Modules; using Systems; using Features; using Markers;
-    using Player.Components; using Player.Modules; using Player.Systems; using Player.Markers;
+    using Components;
+    using Modules;
+    using Systems;
+    using Features;
+    using Markers;
+    using Player.Components;
+    using Player.Modules;
+    using Player.Systems;
+    using Player.Markers;
     using Game.Features.Player.Views;
     using ME.ECS.Collections;
     using UnityEngine;
     using System;
     using Game.Features.Player.Systems;
 
-    namespace Player.Components {}
-    namespace Player.Modules {}
-    namespace Player.Systems {}
-    namespace Player.Markers {}
+    namespace Player.Components { }
+    namespace Player.Modules { }
+    namespace Player.Systems { }
+    namespace Player.Markers { }
     
     #if ECS_COMPILE_IL2CPP_OPTIONS
     [Unity.IL2CPP.CompilerServices.Il2CppSetOptionAttribute(Unity.IL2CPP.CompilerServices.Option.NullChecks, false),
