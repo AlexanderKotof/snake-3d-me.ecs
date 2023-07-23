@@ -1,6 +1,6 @@
 ﻿using Game.Client.Messages;
 
-namespace Game
+namespace Game.Serializer
 {
     public class JSONSerializer
     {

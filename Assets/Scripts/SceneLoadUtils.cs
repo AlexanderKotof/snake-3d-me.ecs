@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using UnityEngine.SceneManagement;
 
-namespace Game
+namespace Game.SceneUtils
 {
     public static class SceneLoadUtils
     {
