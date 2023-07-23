@@ -17,6 +17,7 @@ namespace Game.Features
     using UnityEngine;
     using System;
     using Game.Features.Player.Systems;
+    using Game.Events;
 
     namespace Player.Components { }
     namespace Player.Modules { }
@@ -34,6 +35,9 @@ namespace Game.Features
         public int spawnCount;
 
         public float destroyTimePerSegment = 0.5f;
+
+        public GlobalEvent playerCreatedEvent;
+        public GameOverGlobalEvent gameOverEvent;
 
         private RPCId createPlayerRPCId;
 
@@ -85,6 +89,8 @@ namespace Game.Features
             }
 
             PlayerEntity.Set(new SnakeComponent { tail = new BufferArray<Entity>(tail, tail.Length) });
+
+            playerCreatedEvent.Execute(PlayerEntity);
         }
 
         public void SetPlayer(in Entity entity)

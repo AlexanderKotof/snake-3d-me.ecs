@@ -16,3 +16,5 @@ MonoBehaviour:
   snakeView: {fileID: 4652031784679657396, guid: e5fa3a05414f13548ba46950586b1df7, type: 3}
   spawnCount: 3
   destroyTimePerSegment: 0.1
+  playerCreatedEvent: {fileID: 11400000, guid: 1f9c868a2dba7024fa3d7872f51f678b, type: 2}
+  gameOverEvent: {fileID: 11400000, guid: 92a63e85e55de2647b309d8a78284d11, type: 2}

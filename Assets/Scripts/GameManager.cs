@@ -1,9 +1,11 @@
 using Game.Client;
 using Game.Client.Messages;
+using Game.Events;
 using Game.Features.Collectables.Systems;
 using Game.Features.Player.Systems;
 using Game.SceneUtils;
 using Game.Serializer;
+using ME.ECS;
 using System;
 using System.Threading.Tasks;
 using UI;
@@ -38,6 +40,9 @@ namespace Game
         public IClient Client { get; private set; }
         public PlayerData PlayerData { get; private set; }
 
+        public AddPointsGlobalEvent addPointsEvent;
+        public GameOverGlobalEvent gameOverEvent;
+
         private void Start()
         {
             DontDestroyOnLoad(this);
@@ -50,16 +55,17 @@ namespace Game
             Client.ConnectedToServer += OnConnected;
             Client.OnDisconected += OnDisconected;
 
-            CollectSystem.AddPoints += AddPoints;
-            GameOverSystem.GameOverAfter += OnGameOver;
+            addPointsEvent.Subscribe(OnAddPoints);
+            gameOverEvent.Subscribe(OnGameOver);
 
             UIManager.Instance.SetModel(PlayerData);
             UIManager.Instance.ShowLoading();
         }
+
         private void OnDestroy()
         {
-            GameOverSystem.GameOverAfter -= OnGameOver;
-            CollectSystem.AddPoints -= AddPoints;
+            addPointsEvent.Unsubscribe(OnAddPoints);
+            gameOverEvent.Unsubscribe(OnGameOver);
 
             Client.ConnectedToServer -= OnConnected;
             Client.OnDisconected -= OnDisconected;
@@ -151,16 +157,26 @@ namespace Game
                 ));
         }
 
-        private async void OnGameOver(float delay)
+        private void OnGameOver(in Entity entity)
+        {
+            GameOverAfter(gameOverEvent.delay);
+        }
+
+        private void OnAddPoints(in Entity entity)
+        {
+            AddPoints(addPointsEvent.addApples, addPointsEvent.snakeLength);
+        }
+
+        private async void GameOverAfter(float delay)
         {
             await Task.Delay((int)(delay * 1000));
 
             SendEndGameMessage();
         }
-        private void AddPoints(int pointsCount, int snakeLenght)
+        private void AddPoints(int pointsCount, int snakeLength)
         {
             PlayerData.AddPoints(pointsCount);
-            PlayerData.SetSnakeLength(snakeLenght);
+            PlayerData.SetSnakeLength(snakeLength);
 
             SendUpdateGameMessage();
         }

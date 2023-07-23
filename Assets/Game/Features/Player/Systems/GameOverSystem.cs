@@ -28,8 +28,6 @@ namespace Game.Features.Player.Systems
 
         private Filter _snakeFilter;
 
-        public static event Action<float> GameOverAfter;
-
         public World world { get; set; }
 
         void ISystemBase.OnConstruct() {
@@ -72,7 +70,7 @@ namespace Game.Features.Player.Systems
                 snakeSegment.Set(new DestroyAfterComponent { destoyAfter = timeOffset });
             }
 
-            GameOverAfter?.Invoke(timeOffset);
+            _feature.gameOverEvent.Execute(timeOffset);
 
             world.Pause();
         }

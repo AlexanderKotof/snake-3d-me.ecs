@@ -6,6 +6,7 @@ namespace Game.Features {
     using Collectables.Components; using Collectables.Modules; using Collectables.Systems; using Collectables.Markers;
     using Game.Features.Collectables.Views;
     using System;
+    using Game.Events;
 
     namespace Collectables.Components {}
     namespace Collectables.Modules {}
@@ -30,6 +31,8 @@ namespace Game.Features {
         }
 
         public Collectable[] collectables;
+
+        public AddPointsGlobalEvent addPointsEvent;
 
         public int bananaRate = 5;
 

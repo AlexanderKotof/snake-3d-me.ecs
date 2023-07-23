@@ -26,8 +26,6 @@ namespace Game.Features.Collectables.Systems
         private CollectablesFeature feature;
         private PlayerFeature playerFeature;
 
-        public static event Action<int, int> AddPoints;
-
         public World world { get; set; }
         
         void ISystemBase.OnConstruct() {
@@ -71,7 +69,8 @@ namespace Game.Features.Collectables.Systems
             playerFeature.AddTailSegments(collectable.snakeGrow);
 
             var snakeLength = playerFeature.PlayerEntity.Read<SnakeComponent>().tail.Length + 1;
-            AddPoints?.Invoke(collectable.pointsCount, snakeLength);
+
+            feature.addPointsEvent.Execute(collectable.pointsCount, snakeLength);
         }
     }
 }
