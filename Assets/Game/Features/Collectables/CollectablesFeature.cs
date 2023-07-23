@@ -26,6 +26,7 @@ namespace Game.Features {
             public ViewId viewId;
             public int points;
             public int snakeGrow;
+            public float destroyTimer;
         }
 
         public Collectable[] collectables;
@@ -41,6 +42,7 @@ namespace Game.Features {
 
             AddSystem<SpawnCollectableSystem>();
             AddSystem<CollectSystem>();
+            AddSystem<DestroyCollectablesSystem>();
         }
 
         protected override void OnDeconstruct()

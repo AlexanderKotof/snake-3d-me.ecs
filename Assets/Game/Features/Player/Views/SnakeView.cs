@@ -46,7 +46,7 @@ namespace Game.Features.Player.Views
                 transform.rotation = Quaternion.LookRotation(entity.Read<MovementDirection>().value);
             }
 
-            if (entity.Has<DestroyComponent>())
+            if (entity.Has<DestroyAfterComponent>())
             {
                 DestroyAnimation();
             }
@@ -66,7 +66,7 @@ namespace Game.Features.Player.Views
 
         private async void DestroyAnimation()
         {
-            await Task.Delay((int)(entity.Read<DestroyComponent>().destoyAfter * 1000));
+            await Task.Delay((int)(entity.Read<DestroyAfterComponent>().destoyAfter * 1000));
             animator.Play(_destroyAnimationState);
         }
     }

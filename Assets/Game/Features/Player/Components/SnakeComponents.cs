@@ -25,10 +25,4 @@ namespace Game.Features.Player.Components
 
         }
     }
-
-    public struct DestroyComponent : IComponent
-    {
-        public float destoyAfter;
-        public float timer;
-    }
 }

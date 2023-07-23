@@ -71,6 +71,15 @@ namespace Game.Features.Collectables.Systems
             var randomPosition = GenerateRandomPosition();
             collectableEnt.Set(new PositionComponent { value = randomPosition });
 
+            if (collectableType.destroyTimer > 0)
+            {
+                collectableEnt.Set(new DestroyAfterComponent
+                {
+                    destoyAfter = collectableType.destroyTimer,
+                    timer = 0,
+                });
+            }
+
             world.InstantiateView(collectableType.viewId, collectableEnt);
         }
 

@@ -64,12 +64,12 @@ namespace Game.Features.Player.Systems
         private void DestroySnake()
         {
             float timeOffset = _feature.destroyTimePerSegment;
-            _feature.PlayerEntity.Set(new DestroyComponent { destoyAfter = timeOffset });
+            _feature.PlayerEntity.Set(new DestroyAfterComponent { destoyAfter = timeOffset });
 
             foreach (var snakeSegment in _snakeFilter)
             {
                 timeOffset += _feature.destroyTimePerSegment;
-                snakeSegment.Set(new DestroyComponent { destoyAfter = timeOffset });
+                snakeSegment.Set(new DestroyAfterComponent { destoyAfter = timeOffset });
             }
 
             GameOverAfter?.Invoke(timeOffset);
