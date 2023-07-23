@@ -19,7 +19,7 @@ namespace Game.Features.Movement.Systems {
     public sealed class MovementSystem : ISystemFilter
     { 
         private MovementFeature _movementFeature;
-        private GameFieldFeatureFeature _gameFieldFeature;
+        private GameFieldFeature _gameFieldFeature;
 
         public World world { get; set; }
 

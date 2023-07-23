@@ -99,7 +99,7 @@ namespace Game.Features.Collectables.Systems
 
         private Vector3 GenerateRandomVectorOnGameField()
         {
-            var gameFieldFeature = world.GetFeature<GameFieldFeatureFeature>();
+            var gameFieldFeature = world.GetFeature<GameFieldFeature>();
             return new Vector3(
                 UnityEngine.Random.Range(-gameFieldFeature.xSize / 2, gameFieldFeature.xSize / 2),
                 0,
