@@ -15,6 +15,21 @@
       },
       "hash": "b514888190be674ab21f074193fa1126ee747f27"
     },
+    "com.me.ecs.essentials.globalevents": {
+      "version": "https://github.com/chromealex/me.ecs-globalevents.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.collections": "1.0.0-pre.6",
+        "com.unity.ui": "1.0.0-preview.18",
+        "com.unity.addressables": "1.19.9",
+        "com.unity.burst": "1.5.6",
+        "com.unity.mathematics": "1.2.1",
+        "com.unity.localization": "1.0.5",
+        "com.unity.profiling.core": "1.0.0"
+      },
+      "hash": "2af1742ea8e7543d49cd10e6fe6b6ad273a84bf2"
+    },
     "com.me.ecs.essentials.input": {
       "version": "https://github.com/chromealex/me.ecs-input.git",
       "depth": 0,
