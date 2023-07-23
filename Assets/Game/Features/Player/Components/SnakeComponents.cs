@@ -1,4 +1,5 @@
 ﻿using ME.ECS;
+using ME.ECS.Buffers;
 using ME.ECS.Collections;
 using UnityEngine;
 
@@ -17,12 +18,12 @@ namespace Game.Features.Player.Components
 
         public void CopyFrom(in SnakeComponent other)
         {
-            tail = other.tail;
+            ArrayUtils.Copy(other.tail, ref tail);
         }
 
         public void OnRecycle()
         {
-
+            PoolArray<Entity>.Recycle(tail);
         }
     }
 }
