@@ -1,13 +1,10 @@
 using Game.Client;
 using Game.Client.Messages;
 using Game.Events;
-using Game.Features.Collectables.Systems;
-using Game.Features.Player.Systems;
 using Game.SceneUtils;
 using Game.Serializer;
 using ME.ECS;
 using System;
-using System.Threading.Tasks;
 using UI;
 using UnityEngine;
 
@@ -50,10 +47,10 @@ namespace Game
             PlayerData = new PlayerData();
             Client = new WebSocketClient();
 
-            Client.StartConnectionAsync(GameConfig.uri);
-
             Client.ConnectedToServer += OnConnected;
             Client.OnDisconected += OnDisconected;
+
+            Client.StartConnection(GameConfig.uri);
 
             addPointsEvent.Subscribe(OnAddPoints);
             gameOverEvent.Subscribe(OnGameOver);
@@ -70,7 +67,7 @@ namespace Game
             Client.ConnectedToServer -= OnConnected;
             Client.OnDisconected -= OnDisconected;
 
-            Client.CloseConnectionAsync();
+            Client.CloseConnection();
 
             Client = null;
         }
@@ -98,7 +95,7 @@ namespace Game
 
             UIManager.Instance.ShowLoading();
 
-            Client.StartConnectionAsync(GameConfig.uri);
+            Client.StartConnection(GameConfig.uri);
         }
         private void OnMessageReceived(string message)
         {
@@ -167,11 +164,9 @@ namespace Game
             AddPoints(addPointsEvent.addApples, addPointsEvent.snakeLength);
         }
 
-        private async void GameOverAfter(float delay)
+        private void GameOverAfter(float delay)
         {
-            await Task.Delay((int)(delay * 1000));
-
-            SendEndGameMessage();
+            Invoke(nameof(SendEndGameMessage), delay);
         }
         private void AddPoints(int pointsCount, int snakeLength)
         {

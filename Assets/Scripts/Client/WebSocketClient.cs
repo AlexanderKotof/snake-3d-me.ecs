@@ -1,21 +1,18 @@
+using HybridWebSocket;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Game.Client
 {
     public interface IClient
     {
-        void StartConnectionAsync(string uri);
+        void StartConnection(string uri);
 
         void SendMessage(string message);
 
-        void CloseConnectionAsync();
+        void CloseConnection();
 
         bool HasMessageReceived(out string message);
 
@@ -23,163 +20,79 @@ namespace Game.Client
 
         event Action OnDisconected;
     }
+    
 
     public class WebSocketClient : IClient
     {
-        public Uri Uri { get; private set; }
+        private WebSocket _client;
 
-        private ClientWebSocket Socket { get; set; }
-
-        private BlockingCollection<string> SendQueue = new BlockingCollection<string>();
-
-        private Queue<string> ReceivedMessages = new Queue<string>();
-
-        private CancellationTokenSource SocketLoopTokenSource;
-        private CancellationTokenSource SendLoopTokenSource;
+        private Queue<string> _messageQueue = new Queue<string>();
 
         public event Action ConnectedToServer;
         public event Action OnDisconected;
 
-        private const int CLOSE_SOCKET_TIMEOUT_MS = 10000;
-        private const int KEYSTROKE_TRANSMIT_INTERVAL_MS = 500;
 
-        public async void StartConnectionAsync(string uri)
+        public void StartConnection(string uri)
         {
-            Uri = new Uri(uri);
+            Debug.Log($"Connecting to server {uri}");
 
-            Debug.Log($"Connecting to server {Uri}");
+            _client = WebSocketFactory.CreateInstance(uri);
 
-            SocketLoopTokenSource = new CancellationTokenSource();
-            SendLoopTokenSource = new CancellationTokenSource();
+            _client.OnError += _client_OnError;
+            _client.OnOpen += _client_OnOpen;
+            _client.OnMessage += _client_OnMessage;
+            _client.OnClose += _client_OnClose;
 
-            try
-            {
-                Socket = new ClientWebSocket();
-                await Socket.ConnectAsync(Uri, CancellationToken.None);
-
-                _ = Task.Run(() => SocketProcessingLoopAsync().ConfigureAwait(false));
-                _ = Task.Run(() => TransmitLoopAsync().ConfigureAwait(false));
-
-                ConnectedToServer?.Invoke();
-            }
-            catch (OperationCanceledException)
-            {
-                // normal upon task/token cancellation, disregard
-            }
+            _client.Connect();
         }
 
-        public void SendMessage(string message)
+        private void _client_OnClose(WebSocketCloseCode closeCode)
         {
-            SendQueue.Add(message);
+            Debug.Log($"Disconected, close code {(int)closeCode}-{closeCode}");
+            OnDisconected?.Invoke();
         }
 
-        public async void CloseConnectionAsync()
+        private void _client_OnMessage(byte[] data)
         {
-            Debug.Log("Closing connection");
-
-            SendLoopTokenSource.Cancel();
-            SocketLoopTokenSource.Cancel();
-
-            if (Socket == null || Socket.State != WebSocketState.Open)
-                return;
-
-            // close the socket first, because ReceiveAsync leaves an invalid socket (state = aborted) when the token is cancelled
-            var timeout = new CancellationTokenSource(CLOSE_SOCKET_TIMEOUT_MS);
-            try
-            {
-                // after this, the socket state which change to CloseSent
-                await Socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Closing", timeout.Token);
-                // now we wait for the server response, which will close the socket
-                while (Socket.State != WebSocketState.Closed && !timeout.Token.IsCancellationRequested);
-            }
-            catch (OperationCanceledException)
-            {
-                // normal upon task/token cancellation, disregard
-            }
-            // whether we closed the socket or timed out, we cancel the token causing RecieveAsync to abort the socket
-
-            // the finally block at the end of the processing loop will dispose and null the Socket object
+            string message = Encoding.UTF8.GetString(data, 0, data.Length);
+            Debug.Log($"Message received {message}");
+            _messageQueue.Enqueue(message);
         }
 
-        private async Task SocketProcessingLoopAsync()
+        private void _client_OnError(string errorMsg)
         {
-            var cancellationToken = SocketLoopTokenSource.Token;
-            try
-            {
-                var buffer = WebSocket.CreateClientBuffer(4096, 4096);
-                while (Socket.State != WebSocketState.Closed && !cancellationToken.IsCancellationRequested)
-                {
-                    var receiveResult = await Socket.ReceiveAsync(buffer, cancellationToken);
-                    // if the token is cancelled while ReceiveAsync is blocking, the socket state changes to aborted and it can't be used
-                    if (!cancellationToken.IsCancellationRequested)
-                    {
-                        // the server is notifying us that the connection will close; send acknowledgement
-                        if (Socket.State == WebSocketState.CloseReceived && receiveResult.MessageType == WebSocketMessageType.Close)
-                        {
-                            Debug.Log("Close frame received from server");
-                            SendLoopTokenSource.Cancel();
-                            await Socket.CloseOutputAsync(WebSocketCloseStatus.NormalClosure, "Acknowledge Close frame", CancellationToken.None);
-                        }
-
-                        // display text or binary data
-                        if (Socket.State == WebSocketState.Open && receiveResult.MessageType != WebSocketMessageType.Close)
-                        {
-                            string message = Encoding.UTF8.GetString(buffer.Array, 0, receiveResult.Count);
-                            ReceivedMessages.Enqueue(message);
-                        }
-                    }
-                }
-
-                OnDisconected?.Invoke();
-
-                Debug.Log($"Ending processing loop in state {Socket.State}");
-            }
-            catch (OperationCanceledException)
-            {
-                // normal upon task/token cancellation, disregard
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-            }
-            finally
-            {
-                SendLoopTokenSource.Cancel();
-                Socket.Dispose();
-                Socket = null;
-            }
+            Debug.LogError($"Error: {errorMsg}");
         }
 
-        private async Task TransmitLoopAsync()
+        public void CloseConnection()
         {
-            var cancellationToken = SendLoopTokenSource.Token;
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                try
-                {
-                    await Task.Delay(KEYSTROKE_TRANSMIT_INTERVAL_MS, cancellationToken);
-                    if (!cancellationToken.IsCancellationRequested && SendQueue.TryTake(out var message))
-                    {
-                        Debug.Log($"Sending message: {message}");
+            _client.OnOpen -= _client_OnOpen;
+            _client.OnMessage -= _client_OnMessage;
+            _client.OnClose -= _client_OnClose;
+            _client.OnError -= _client_OnError;
 
-                        var msgbuf = new ArraySegment<byte>(Encoding.UTF8.GetBytes(message));
-                        await Socket.SendAsync(msgbuf, WebSocketMessageType.Text, endOfMessage: true, CancellationToken.None);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    // normal upon task/token cancellation, disregard
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
-                }
-            }
+            if (_client.GetState() != WebSocketState.Closed)
+                _client.Close();
+            
+            _client = null;
         }
 
         public bool HasMessageReceived(out string message)
         {
-            return ReceivedMessages.TryDequeue(out message);
+            return _messageQueue.TryDequeue(out message);
+        }
+
+        public void SendMessage(string message)
+        {
+            Debug.Log($"Send message {message}");
+            var bytes = Encoding.UTF8.GetBytes(message);
+            _client.Send(bytes);
+        }
+ 
+        private void _client_OnOpen()
+        {
+            Debug.Log($"Connected to server!");
+            ConnectedToServer?.Invoke();
         }
     }
 }
