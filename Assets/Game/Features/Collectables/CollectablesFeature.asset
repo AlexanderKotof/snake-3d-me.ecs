@@ -23,4 +23,4 @@ MonoBehaviour:
     snakeGrow: 2
     destroyTimer: 10
   addPointsEvent: {fileID: 11400000, guid: c0926e9160cc13d4dbc7cd6b0390190c, type: 2}
-  bananaRate: 5
+  bananaRate: 6

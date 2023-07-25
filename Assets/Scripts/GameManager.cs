@@ -30,6 +30,13 @@ namespace Game
         {
             GameId = value;
         }
+
+        public void Reset()
+        {
+            PointsCount = 0;
+            SnakeLenght = 0;
+            GameId = 0;
+        }
     }
 
     public partial class GameManager : MonoBehaviour
@@ -45,7 +52,12 @@ namespace Game
             DontDestroyOnLoad(this);
 
             PlayerData = new PlayerData();
+
+#if UNITY_WEBGL && !UNITY_EDITOR
             Client = new WebSocketClient();
+#else
+            Client = new WebSocketClientNoWeb();
+#endif
 
             Client.ConnectedToServer += OnConnected;
             Client.OnDisconected += OnDisconected;
@@ -89,6 +101,7 @@ namespace Game
                 UIManager.Instance.ShowLoading();
             });
         }
+
         private void OnDisconected()
         {
             Debug.Log("Disconected");
@@ -123,13 +136,7 @@ namespace Game
                         gameTime = TimeSpan.FromMilliseconds(m.payload.finishAt.Value - m.payload.startAt),
                     };
 
-                    UIManager.Instance.ShowGameOver(() =>
-                    {
-                        Client.SendMessage(JSONSerializer.Serialize(
-                        MessageFactory.StartGameMessage
-                        ));
-                        UIManager.Instance.ShowLoading();
-                    }, gameInfo);
+                    UIManager.Instance.ShowGameOver(RestartGame, gameInfo);
 
 
                     break;
@@ -140,6 +147,15 @@ namespace Game
             }
         }
 
+        private void RestartGame()
+        {
+            PlayerData.Reset();
+
+            Client.SendMessage(JSONSerializer.Serialize(
+                        MessageFactory.StartGameMessage
+                        ));
+            UIManager.Instance.ShowLoading();
+        }
 
         private void SendUpdateGameMessage()
         {
@@ -156,7 +172,7 @@ namespace Game
 
         private void OnGameOver(in Entity entity)
         {
-            GameOverAfter(gameOverEvent.delay);
+            Invoke(nameof(SendEndGameMessage), gameOverEvent.delay);
         }
 
         private void OnAddPoints(in Entity entity)
@@ -164,10 +180,6 @@ namespace Game
             AddPoints(addPointsEvent.addApples, addPointsEvent.snakeLength);
         }
 
-        private void GameOverAfter(float delay)
-        {
-            Invoke(nameof(SendEndGameMessage), delay);
-        }
         private void AddPoints(int pointsCount, int snakeLength)
         {
             PlayerData.AddPoints(pointsCount);

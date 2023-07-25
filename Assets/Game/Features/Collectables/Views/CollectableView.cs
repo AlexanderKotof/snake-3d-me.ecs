@@ -37,7 +37,7 @@ namespace Game.Features.Collectables.Views
             {
                 var destroy = entity.Read<DestroyAfterComponent>();
                 var span = TimeSpan.FromSeconds(destroy.destoyAfter - destroy.timer);
-                timerText.SetText($"{span.Seconds}:{span.Milliseconds}");
+                timerText.SetText($"{span.Seconds}:{span.Milliseconds / 10}");
             }
         }
     }

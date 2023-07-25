@@ -48,7 +48,7 @@ namespace Game.Features.Player.Views
 
             if (entity.Has<DestroyAfterComponent>())
             {
-                DestroyAnimation();
+                Invoke(nameof(DestroyAnimation), entity.Read<DestroyAfterComponent>().destoyAfter);
             }
         }
 
@@ -64,9 +64,8 @@ namespace Game.Features.Player.Views
             }
         }
 
-        private async void DestroyAnimation()
+        private void DestroyAnimation()
         {
-            await Task.Delay((int)(entity.Read<DestroyAfterComponent>().destoyAfter * 1000));
             animator.Play(_destroyAnimationState);
         }
     }

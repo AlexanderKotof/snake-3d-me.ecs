@@ -55,7 +55,7 @@ namespace Game.Features {
 
         public Collectable GetCollectable(int counter)
         {
-            var collectableType = counter > 0 && counter % bananaRate == 0 ? 1 : 0;
+            var collectableType = counter % bananaRate == bananaRate - 1 ? 1 : 0;
             var collectable = collectables[collectableType];
             return collectable;
         }
