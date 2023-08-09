@@ -1,5 +1,5 @@
 # snake-3d-me.ecs
-Snake 3d game created with [ME.ECS](https://github.com/chromealex/ecs) with client-server communication
+Snake 3d game created with [ME.ECS](https://github.com/chromealex/ecs) with WebSocket based client-server communication
 
 # Assignment
 Test assignment [here](https://qubixinfinity.notion.site/Unity-Developer-ME-ECS-e4ab52150c384055acbe1ce48deda698)
